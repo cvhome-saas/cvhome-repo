@@ -30,9 +30,8 @@ resource "aws_ecr_repository" "private_ecr_repo" {
   provider = aws.frankfort
 }
 
-
 resource "aws_ecrpublic_repository" "public_ecr_repo" {
   repository_name = each.value
   for_each        = var.projects
-  provider = aws.virginia
+  provider        = aws.virginia
 }
