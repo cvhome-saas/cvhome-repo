@@ -46,9 +46,7 @@ data "aws_iam_policy_document" "ecr-private-releaser" {
     sid    = "s1"
     effect = "Allow"
     actions = [
-      "ecr:GetAuthorizationToken",
-      "ecr-public:GetAuthorizationToken",
-      "sts:GetServiceBearerToken",
+      "ecr:GetAuthorizationToken"
     ]
     resources = ["*"]
   }
@@ -89,7 +87,8 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
     actions = [
       "ecr:GetAuthorizationToken",
       "ecr-public:GetAuthorizationToken",
-      "sts:GetServiceBearerToken"
+      "sts:GetServiceBearerToken",
+      "ecr-public:InitiateLayerUpload"
     ]
     resources = ["*"]
   }
