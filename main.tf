@@ -46,7 +46,9 @@ data "aws_iam_policy_document" "ecr-private-releaser" {
     sid    = "s1"
     effect = "Allow"
     actions = [
-      "ecr:GetAuthorizationToken"
+      "ecr:GetAuthorizationToken",
+      "ecr-public:GetAuthorizationToken",
+      "sts:GetServiceBearerToken",
     ]
     resources = ["*"]
   }
@@ -85,7 +87,9 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
     sid    = "s1"
     effect = "Allow"
     actions = [
-      "ecr:GetAuthorizationToken"
+      "ecr:GetAuthorizationToken",
+      "ecr-public:GetAuthorizationToken",
+      "sts:GetServiceBearerToken"
     ]
     resources = ["*"]
   }
@@ -93,8 +97,6 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
     sid    = "s2"
     effect = "Allow"
     actions = [
-      "ecr-public:GetAuthorizationToken",
-      "sts:GetServiceBearerToken",
       "ecr:GetAuthorizationToken",
       "ecr:BatchGetImage",
       "ecr:BatchCheckLayerAvailability",
