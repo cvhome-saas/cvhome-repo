@@ -86,9 +86,9 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
     effect = "Allow"
     actions = [
       "ecr:GetAuthorizationToken",
+      "ecr-public:InitiateLayerUpload",
       "ecr-public:GetAuthorizationToken",
-      "sts:GetServiceBearerToken",
-      "ecr-public:InitiateLayerUpload"
+      "sts:GetServiceBearerToken"
     ]
     resources = ["*"]
   }
