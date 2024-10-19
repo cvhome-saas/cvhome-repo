@@ -85,8 +85,6 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
     sid    = "s1"
     effect = "Allow"
     actions = [
-      "ecr:GetAuthorizationToken",
-      "ecr-public:InitiateLayerUpload",
       "ecr-public:GetAuthorizationToken",
       "sts:GetServiceBearerToken"
     ]
@@ -96,14 +94,14 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
     sid    = "s2"
     effect = "Allow"
     actions = [
-      "ecr:GetAuthorizationToken",
-      "ecr:BatchGetImage",
-      "ecr:BatchCheckLayerAvailability",
-      "ecr:CompleteLayerUpload",
-      "ecr:GetDownloadUrlForLayer",
-      "ecr:InitiateLayerUpload",
-      "ecr:PutImage",
-      "ecr:UploadLayerPart"
+      "ecr-public:GetAuthorizationToken",
+      "ecr-public:BatchGetImage",
+      "ecr-public:BatchCheckLayerAvailability",
+      "ecr-public:CompleteLayerUpload",
+      "ecr-public:GetDownloadUrlForLayer",
+      "ecr-public:InitiateLayerUpload",
+      "ecr-public:PutImage",
+      "ecr-public:UploadLayerPart"
     ]
     resources = [for i in aws_ecrpublic_repository.public_ecr_repo : i.arn]
   }
