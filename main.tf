@@ -36,14 +36,22 @@ resource "aws_ecrpublic_repository" "public_ecr_repo" {
   provider        = aws.virginia
 }
 
-resource "aws_iam_user" "ecr-private-releaser" {
-  name     = "ecr-private-releaser"
+resource "aws_iam_user" "ecr-releaser" {
+  name     = "ecr-releaser"
   provider = aws.virginia
 }
 
 data "aws_iam_policy_document" "ecr-private-releaser" {
   statement {
     sid    = "s1"
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken"
+    ]
+    resources = ["*"]
+  }
+  statement {
+    sid    = "s2"
     effect = "Allow"
     actions = [
       "ecr:GetAuthorizationToken",
@@ -68,19 +76,21 @@ resource "aws_iam_policy" "ecr-private-releaser" {
 resource "aws_iam_policy_attachment" "ecr-private-releaser" {
   name       = "ecr-private-releaser-attachment"
   policy_arn = aws_iam_policy.ecr-private-releaser.arn
-  users = ["ecr-private-releaser"]
+  users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.virginia
-}
-
-
-resource "aws_iam_user" "ecr-public-releaser" {
-  name     = "ecr-public-releaser"
-  provider = aws.virginia
 }
 
 data "aws_iam_policy_document" "ecr-public-releaser" {
   statement {
     sid    = "s1"
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken"
+    ]
+    resources = ["*"]
+  }
+  statement {
+    sid    = "s2"
     effect = "Allow"
     actions = [
       "ecr:GetAuthorizationToken",
@@ -105,6 +115,6 @@ resource "aws_iam_policy" "ecr-public-releaser" {
 resource "aws_iam_policy_attachment" "ecr-public-releaser" {
   name       = "ecr-public-releaser-attachment"
   policy_arn = aws_iam_policy.ecr-public-releaser.arn
-  users = ["ecr-public-releaser"]
+  users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.virginia
 }
