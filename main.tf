@@ -35,3 +35,76 @@ resource "aws_ecrpublic_repository" "public_ecr_repo" {
   for_each        = var.projects
   provider        = aws.virginia
 }
+
+resource "aws_iam_user" "ecr-private-releaser" {
+  name     = "ecr-private-releaser"
+  provider = aws.virginia
+}
+
+data "aws_iam_policy_document" "ecr-private-releaser" {
+  statement {
+    sid    = "s1"
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchGetImage",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:CompleteLayerUpload",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:InitiateLayerUpload",
+      "ecr:PutImage",
+      "ecr:UploadLayerPart"
+    ]
+    resources = [for i in aws_ecr_repository.private_ecr_repo : i.arn]
+  }
+}
+
+resource "aws_iam_policy" "ecr-private-releaser" {
+  name     = "ecr-private-releaser-policy"
+  policy   = data.aws_iam_policy_document.ecr-private-releaser.json
+  provider = aws.virginia
+}
+
+resource "aws_iam_policy_attachment" "ecr-private-releaser" {
+  name       = "ecr-private-releaser-attachment"
+  policy_arn = aws_iam_policy.ecr-private-releaser.arn
+  users = ["ecr-private-releaser"]
+  provider   = aws.virginia
+}
+
+
+resource "aws_iam_user" "ecr-public-releaser" {
+  name     = "ecr-public-releaser"
+  provider = aws.virginia
+}
+
+data "aws_iam_policy_document" "ecr-public-releaser" {
+  statement {
+    sid    = "s1"
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchGetImage",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:CompleteLayerUpload",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:InitiateLayerUpload",
+      "ecr:PutImage",
+      "ecr:UploadLayerPart"
+    ]
+    resources = [for i in aws_ecrpublic_repository.public_ecr_repo : i.arn]
+  }
+}
+
+resource "aws_iam_policy" "ecr-public-releaser" {
+  name     = "ecr-public-releaser-policy"
+  policy   = data.aws_iam_policy_document.ecr-public-releaser.json
+  provider = aws.virginia
+}
+
+resource "aws_iam_policy_attachment" "ecr-public-releaser" {
+  name       = "ecr-public-releaser-attachment"
+  policy_arn = aws_iam_policy.ecr-public-releaser.arn
+  users = ["ecr-public-releaser"]
+  provider   = aws.virginia
+}
