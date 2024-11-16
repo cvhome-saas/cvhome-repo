@@ -131,6 +131,7 @@ data "aws_iam_policy_document" "ecs-deploy" {
     actions = [
       "ecs:DescribeTaskDefinition",
       "ecs:RegisterTaskDefinition",
+      "ecs:DescribeServices",
       "iam:PassRole"
     ]
     resources = ["*"]
