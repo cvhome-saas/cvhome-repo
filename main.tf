@@ -11,13 +11,13 @@ terraform {
 
 provider "aws" {
   region  = var.region
-  profile = "cvhome-infra-pipeline"
+  profile = var.aws_profile
   alias   = "frankfort"
 }
 
 provider "aws" {
   region  = "us-east-1"
-  profile = "cvhome-infra-pipeline"
+  profile = var.aws_profile
   alias   = "virginia"
 }
 
