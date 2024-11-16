@@ -129,7 +129,8 @@ data "aws_iam_policy_document" "ecs-deploy" {
     sid    = "s1"
     effect = "Allow"
     actions = [
-      "ecs:DescribeTaskDefinition"
+      "ecs:DescribeTaskDefinition",
+      "ecs:RegisterTaskDefinition"
     ]
     resources = ["*"]
   }
