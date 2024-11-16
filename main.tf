@@ -122,3 +122,28 @@ resource "aws_iam_policy_attachment" "ecr-public-releaser" {
   users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.virginia
 }
+
+
+data "aws_iam_policy_document" "ecs-deploy" {
+  statement {
+    sid    = "s1"
+    effect = "Allow"
+    actions = [
+      "ecs:DescribeTaskDefinition"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "ecs-deploy" {
+  name     = "ecs-deploy-policy"
+  policy   = data.aws_iam_policy_document.ecs-deploy.json
+  provider = aws.frankfort
+}
+
+resource "aws_iam_policy_attachment" "ecs-deploy-releaser" {
+  name       = "ecs-deploy-attachment"
+  policy_arn = aws_iam_policy.ecs-deploy.arn
+  users = [aws_iam_user.ecr-releaser.name]
+  provider   = aws.frankfort
+}
