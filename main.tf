@@ -89,6 +89,7 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
     effect = "Allow"
     actions = [
       "ecr-public:GetAuthorizationToken",
+      "ecr-public:DescribeRegistries",
       "sts:GetServiceBearerToken"
     ]
     resources = ["*"]
@@ -97,7 +98,6 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
     sid    = "s2"
     effect = "Allow"
     actions = [
-      "ecr-public:DescribeRegistries",
       "ecr-public:GetAuthorizationToken",
       "ecr-public:BatchGetImage",
       "ecr-public:BatchCheckLayerAvailability",
