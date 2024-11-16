@@ -28,17 +28,20 @@ resource "aws_ecr_repository" "private_ecr_repo" {
   }
   for_each = var.projects
   provider = aws.frankfort
+  force_delete = true
 }
 
 resource "aws_ecrpublic_repository" "public_ecr_repo" {
   repository_name = each.value
   for_each        = var.projects
   provider        = aws.virginia
+  force_destroy = true
 }
 
 resource "aws_iam_user" "ecr-releaser" {
   name     = "ecr-releaser"
   provider = aws.virginia
+  force_destroy = true
 }
 
 data "aws_iam_policy_document" "ecr-private-releaser" {
