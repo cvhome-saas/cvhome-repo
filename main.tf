@@ -97,6 +97,7 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
     sid    = "s2"
     effect = "Allow"
     actions = [
+      "ecr-public:DescribeRegistries",
       "ecr-public:GetAuthorizationToken",
       "ecr-public:BatchGetImage",
       "ecr-public:BatchCheckLayerAvailability",
