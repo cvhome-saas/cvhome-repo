@@ -130,7 +130,8 @@ data "aws_iam_policy_document" "ecs-deploy" {
     effect = "Allow"
     actions = [
       "ecs:DescribeTaskDefinition",
-      "ecs:RegisterTaskDefinition"
+      "ecs:RegisterTaskDefinition",
+      "iam:PassRole"
     ]
     resources = ["*"]
   }
