@@ -1,0 +1,38 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Trigger Destroy
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform init -backend-config="region=${CONFIG_STATE_BUCKET_REGION}" -backend-config="bucket=${CONFIG_STATE_BUCKET_NAME}" -backend-config="key=${CONFIG_STATE_BUCKET_KEY}"
+        env:
+          CONFIG_STATE_BUCKET_REGION: ${{ secrets.CONFIG_STATE_BUCKET_REGION }}
+          CONFIG_STATE_BUCKET_NAME: ${{ secrets.CONFIG_STATE_BUCKET_NAME }}
+          CONFIG_STATE_BUCKET_KEY: ${{ secrets.CONFIG_STATE_BUCKET_KEY }}
+      - id: plan
+        run: terraform plan
+      - id: apply
+        run: terraform destroy --auto-approve=true
+

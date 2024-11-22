@@ -1,4 +1,3 @@
-aws_profile = "default"
 region = "eu-central-1"
 app = "cvhome-repo"
 projects = [

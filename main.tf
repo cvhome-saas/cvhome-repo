@@ -10,13 +10,11 @@ terraform {
 }
 
 provider "aws" {
-  profile = var.aws_profile
   region  = var.region
   alias   = "frankfort"
 }
 
 provider "aws" {
-  profile = var.aws_profile
   region  = "us-east-1"
   alias   = "virginia"
 }
