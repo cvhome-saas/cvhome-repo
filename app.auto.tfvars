@@ -10,7 +10,7 @@ projects = [
   "store-pod/store-pod-gateway",
   "store-pod/store",
   "store-pod/landing-ui",
-  "store-pod/saas-pod-gateway",
+  "store-pod/store-pod-saas-gateway",
 
   "saas-pod/saas-pod-gateway-v2"
 ]
