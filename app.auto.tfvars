@@ -4,6 +4,7 @@ projects = [
   "store-core/store-core-gateway",
   "store-core/auth",
   "store-core/manager",
+  "store-core/subscription",
   "store-core/store-ui",
   "store-core/welcome-ui",
 
