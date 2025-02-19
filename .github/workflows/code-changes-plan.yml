@@ -35,7 +35,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: get caller identity
         id: get-aws-account-id
-        run: echo "aws-account-id=$(aws sts get-caller-identity --query Account --output text)">> $GITHUB_OUTPUT
+        run:
+          - aws-account-id=$(aws sts get-caller-identity --query Account --output text)
+          - echo "$aws-account-id">> $GITHUB_OUTPUT
       - name: Print
         run: echo "${CONFIG_STATE_BUCKET_NAME}-${GITHUB_REPOSITORY_OWNER}"
         env:
