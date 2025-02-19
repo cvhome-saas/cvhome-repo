@@ -45,7 +45,7 @@ jobs:
       - name: create bucket
         id: create-bucket
         run: |
-          aws s3api create-bucket --bucket ${CONFIG_STATE_BUCKET_NAME} --create-bucket-configuration LocationConstraint=${CONFIG_STATE_BUCKET_REGION} --region ${CONFIG_STATE_BUCKET_REGION} > /dev/null 2> /dev/null
+          aws s3api create-bucket --bucket 824591438121-184552102 --create-bucket-configuration LocationConstraint=eu-central-1 --region eu-central-1 > /dev/null 2> /dev/null
         env:
           CONFIG_STATE_BUCKET_REGION: ${{ secrets.CONFIG_STATE_BUCKET_REGION }}
           CONFIG_STATE_BUCKET_NAME: "${{ steps.get-aws-account-id.outputs.bucket-name }}"
