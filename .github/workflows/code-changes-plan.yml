@@ -39,11 +39,16 @@ jobs:
           aai=$(aws sts get-caller-identity --query Account --output text)
           bucket=bucket-name=${aai}-${GITHUB_REPOSITORY_OWNER_ID}
           echo "${bucket}">> $GITHUB_OUTPUT
+        env:
+          CONFIG_STATE_BUCKET_REGION: ${{ secrets.CONFIG_STATE_BUCKET_REGION }}
+          CONFIG_STATE_BUCKET_NAME: "${{ steps.get-aws-account-id.outputs.bucket-name }}"
+      - name: create bucket
+        id: create-bucket
+        run: |
           aws s3api create-bucket --bucket ${CONFIG_STATE_BUCKET_NAME} --create-bucket-configuration LocationConstraint=${CONFIG_STATE_BUCKET_REGION} --region ${CONFIG_STATE_BUCKET_REGION} > /dev/null 2> /dev/null
         env:
           CONFIG_STATE_BUCKET_REGION: ${{ secrets.CONFIG_STATE_BUCKET_REGION }}
           CONFIG_STATE_BUCKET_NAME: "${{ steps.get-aws-account-id.outputs.bucket-name }}"
-
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init -backend-config="region=${CONFIG_STATE_BUCKET_REGION}" -backend-config="bucket=${CONFIG_STATE_BUCKET_NAME}" -backend-config="key=${GITHUB_REPOSITORY_ID}"
         env:
