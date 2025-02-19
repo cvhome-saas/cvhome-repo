@@ -37,7 +37,7 @@ jobs:
         id: get-aws-account-id
         run: |
           echo aai=$(aws sts get-caller-identity --query Account --output text)
-          echo "bucket-name${aai}-${GITHUB_REPOSITORY_OWNER}">> $GITHUB_OUTPUT
+          echo "bucket-name=${aai}-${GITHUB_REPOSITORY_OWNER}">> $GITHUB_OUTPUT
       - name: Print
         run: echo "${CONFIG_STATE_BUCKET_NAME}"
         env:
