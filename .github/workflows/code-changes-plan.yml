@@ -38,7 +38,9 @@ jobs:
         run: |
           aai=$(aws sts get-caller-identity --query Account --output text)
           bucket="${aai}-${GITHUB_REPOSITORY_OWNER_ID}-${CONFIG_STATE_BUCKET_REGION}"
+          project=$(cksum <<< $bucket | cut -f 1 -d ' ')
           echo "bucket-name=${bucket}">> $GITHUB_OUTPUT
+          echo "project=${project}">> $GITHUB_OUTPUT
         env:
           CONFIG_STATE_BUCKET_REGION: ${{ secrets.CONFIG_STATE_BUCKET_REGION }}
           CONFIG_STATE_BUCKET_NAME: "${{ steps.get-aws-account-id.outputs.bucket-name }}"
