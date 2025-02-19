@@ -37,9 +37,9 @@ jobs:
         id: get-aws-account-id
         run: echo "aws-account-id=$(aws sts get-caller-identity --query Account --output text)">> $GITHUB_OUTPUT
       - name: Print
-        run: echo "${GITHUB_REPOSITORY_OWNER}"
+        run: echo "${CONFIG_STATE_BUCKET_NAME}"
         env:
-          CONFIG_STATE_BUCKET_NAME: "${{ steps.get-aws-account-id.outputs.aws-account-id }}${{vars.GITHUB_REPOSITORY_OWNER}}"
+          CONFIG_STATE_BUCKET_NAME: "${{env.GITHUB_REPOSITORY_OWNER}}"
 
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init -backend-config="region=${CONFIG_STATE_BUCKET_REGION}" -backend-config="bucket=${CONFIG_STATE_BUCKET_NAME}" -backend-config="key=${CONFIG_STATE_BUCKET_KEY}"
