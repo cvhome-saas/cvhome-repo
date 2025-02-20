@@ -152,7 +152,7 @@ resource "aws_iam_policy_attachment" "ecs-deploy-releaser" {
 }
 
 resource "aws_ssm_parameter" "config-stripe" {
-  name = "${var.project}/config/stripe"
+  name = "/${var.project}/config/stripe"
   type = "String"
   value = jsonencode({
     "key" : "",
@@ -160,7 +160,7 @@ resource "aws_ssm_parameter" "config-stripe" {
   })
 }
 resource "aws_ssm_parameter" "config-domain" {
-  name = "${var.project}/config/domain"
+  name = "/${var.project}/config/domain"
   type = "String"
   value = jsonencode({
     "domain" : "",
@@ -168,7 +168,7 @@ resource "aws_ssm_parameter" "config-domain" {
   })
 }
 resource "aws_ssm_parameter" "config-smtp" {
-  name = "${var.project}/config/smtp"
+  name = "/${var.project}/config/smtp"
   type = "String"
   value = jsonencode({
     "host" : "",
@@ -178,7 +178,7 @@ resource "aws_ssm_parameter" "config-smtp" {
   })
 }
 resource "aws_ssm_parameter" "config-kc" {
-  name = "${var.project}/config/kc"
+  name = "/${var.project}/config/kc"
   type = "String"
   value = jsonencode({
     "username" : "",
@@ -186,7 +186,7 @@ resource "aws_ssm_parameter" "config-kc" {
   })
 }
 resource "aws_ssm_parameter" "config-cvhome" {
-  name = "${var.project}/config/cvhome"
+  name = "/${var.project}/config/cvhome"
   type = "String"
   value = jsonencode({
     "trackUsage" : "false",
