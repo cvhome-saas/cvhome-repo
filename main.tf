@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.75.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.3"
+    }
   }
 }
 
@@ -151,6 +155,12 @@ resource "aws_iam_policy_attachment" "ecs-deploy-releaser" {
   provider   = aws.frankfort
 }
 
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
 resource "aws_ssm_parameter" "config-stripe" {
   name = "/${var.project}/config/stripe"
   type = "String"
@@ -181,8 +191,8 @@ resource "aws_ssm_parameter" "config-kc" {
   name = "/${var.project}/config/kc"
   type = "String"
   value = jsonencode({
-    "username" : "",
-    "password" : ""
+    "username" : "sys-admin@mail.com",
+    "password" : random_password.password.result
   })
 }
 resource "aws_ssm_parameter" "config-cvhome" {
