@@ -155,8 +155,8 @@ resource "aws_ssm_parameter" "config-stripe" {
   name = "/${var.project}/config/stripe"
   type = "String"
   value = jsonencode({
-    "key" : "",
-    "signingKey" : ""
+    "stripeKey" : "",
+    "stripeWebhockSigningKey" : ""
   })
 }
 resource "aws_ssm_parameter" "config-domain" {
@@ -195,3 +195,25 @@ resource "aws_ssm_parameter" "config-cvhome" {
   })
 }
 
+data "aws_iam_policy_document" "ssm-config" {
+  statement {
+    sid    = "s1"
+    effect = "Allow"
+    actions = [
+      "ssm:GetParameters"
+    ]
+    resources = ["*"]
+  }
+}
+resource "aws_iam_policy" "ssm-config" {
+  name     = "${var.project}-ssm-config-policy"
+  policy   = data.aws_iam_policy_document.ssm-config.json
+  provider = aws.frankfort
+}
+
+resource "aws_iam_policy_attachment" "ssm-config-releaser" {
+  name       = "${var.project}-ssm-config"
+  policy_arn = aws_iam_policy.ssm-config.arn
+  users = [aws_iam_user.ecr-releaser.name]
+  provider   = aws.frankfort
+}
