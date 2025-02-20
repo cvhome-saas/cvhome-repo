@@ -46,5 +46,8 @@ jobs:
           CONFIG_STATE_BUCKET_NAME: "${{ steps.build-state-bucket.outputs.bucket-name }}"
       - id: plan
         run: terraform plan
+        env:
+          TF_VAR_region: "eu-central-1"
+
 
 
