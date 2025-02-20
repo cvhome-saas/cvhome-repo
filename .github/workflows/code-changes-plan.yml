@@ -47,7 +47,7 @@ jobs:
       - id: plan
         run: terraform plan
         env:
-          TF_VAR_region: "eu-central-1"
+          TF_VAR_region: ${{ secrets.AWS_REGION }}
 
 
 
