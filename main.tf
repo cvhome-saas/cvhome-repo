@@ -20,7 +20,7 @@ provider "aws" {
 }
 
 resource "aws_ecr_repository" "private_ecr_repo" {
-  name = each.value
+  name = "${var.project}/${each.value}"
   image_scanning_configuration {
     scan_on_push = false
   }
@@ -30,14 +30,14 @@ resource "aws_ecr_repository" "private_ecr_repo" {
 }
 
 resource "aws_ecrpublic_repository" "public_ecr_repo" {
-  repository_name = each.value
+  repository_name = "${var.project}/${each.value}"
   for_each        = var.projects
   provider        = aws.virginia
   force_destroy   = true
 }
 
 resource "aws_iam_user" "ecr-releaser" {
-  name          = "ecr-releaser"
+  name          = "${var.project}-ecr-releaser"
   provider      = aws.virginia
   force_destroy = true
 }
@@ -69,13 +69,13 @@ data "aws_iam_policy_document" "ecr-private-releaser" {
 }
 
 resource "aws_iam_policy" "ecr-private-releaser" {
-  name     = "ecr-private-releaser-policy"
+  name     = "${var.project}-ecr-private-releaser-policy"
   policy   = data.aws_iam_policy_document.ecr-private-releaser.json
   provider = aws.virginia
 }
 
 resource "aws_iam_policy_attachment" "ecr-private-releaser" {
-  name       = "ecr-private-releaser-attachment"
+  name       = "${var.project}-ecr-private-releaser-attachment"
   policy_arn = aws_iam_policy.ecr-private-releaser.arn
   users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.virginia
@@ -110,13 +110,13 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
 }
 
 resource "aws_iam_policy" "ecr-public-releaser" {
-  name     = "ecr-public-releaser-policy"
+  name     = "${var.project}-ecr-public-releaser-policy"
   policy   = data.aws_iam_policy_document.ecr-public-releaser.json
   provider = aws.virginia
 }
 
 resource "aws_iam_policy_attachment" "ecr-public-releaser" {
-  name       = "ecr-public-releaser-attachment"
+  name       = "${var.project}-ecr-public-releaser-attachment"
   policy_arn = aws_iam_policy.ecr-public-releaser.arn
   users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.virginia
@@ -139,13 +139,13 @@ data "aws_iam_policy_document" "ecs-deploy" {
 }
 
 resource "aws_iam_policy" "ecs-deploy" {
-  name     = "ecs-deploy-policy"
+  name     = "${var.project}-ecs-deploy-policy"
   policy   = data.aws_iam_policy_document.ecs-deploy.json
   provider = aws.frankfort
 }
 
 resource "aws_iam_policy_attachment" "ecs-deploy-releaser" {
-  name       = "ecs-deploy-attachment"
+  name       = "${var.project}-ecs-deploy-attachment"
   policy_arn = aws_iam_policy.ecs-deploy.arn
   users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.frankfort
