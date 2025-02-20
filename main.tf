@@ -10,13 +10,13 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.region
-  alias   = "frankfort"
+  region = var.region
+  alias  = "frankfort"
 }
 
 provider "aws" {
-  region  = "us-east-1"
-  alias   = "virginia"
+  region = "us-east-1"
+  alias  = "virginia"
 }
 
 resource "aws_ecr_repository" "private_ecr_repo" {
@@ -24,8 +24,8 @@ resource "aws_ecr_repository" "private_ecr_repo" {
   image_scanning_configuration {
     scan_on_push = false
   }
-  for_each = var.projects
-  provider = aws.frankfort
+  for_each     = var.projects
+  provider     = aws.frankfort
   force_delete = true
 }
 
@@ -33,12 +33,12 @@ resource "aws_ecrpublic_repository" "public_ecr_repo" {
   repository_name = each.value
   for_each        = var.projects
   provider        = aws.virginia
-  force_destroy = true
+  force_destroy   = true
 }
 
 resource "aws_iam_user" "ecr-releaser" {
-  name     = "ecr-releaser"
-  provider = aws.virginia
+  name          = "ecr-releaser"
+  provider      = aws.virginia
   force_destroy = true
 }
 
@@ -150,3 +150,48 @@ resource "aws_iam_policy_attachment" "ecs-deploy-releaser" {
   users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.frankfort
 }
+
+resource "aws_ssm_parameter" "config-stripe" {
+  name = "${var.project}/config/stripe"
+  type = "String"
+  value = jsonencode({
+    "key" : "",
+    "signingKey" : ""
+  })
+}
+resource "aws_ssm_parameter" "config-domain" {
+  name = "${var.project}/config/domain"
+  type = "String"
+  value = jsonencode({
+    "domain" : "",
+    "domainCertificateArn" : ""
+  })
+}
+resource "aws_ssm_parameter" "config-smtp" {
+  name = "${var.project}/config/smtp"
+  type = "String"
+  value = jsonencode({
+    "host" : "",
+    "username" : "",
+    "password" : "",
+    "port" : ""
+  })
+}
+resource "aws_ssm_parameter" "config-kc" {
+  name = "${var.project}/config/kc"
+  type = "String"
+  value = jsonencode({
+    "username" : "",
+    "password" : ""
+  })
+}
+resource "aws_ssm_parameter" "config-cvhome" {
+  name = "${var.project}/config/cvhome"
+  type = "String"
+  value = jsonencode({
+    "trackUsage" : "false",
+    "usageExecededAction" : "continue",
+    "nonRenewedSubscriptionAction" : "continue"
+  })
+}
+
