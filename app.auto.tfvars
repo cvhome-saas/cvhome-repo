@@ -1,4 +1,3 @@
-region = "eu-central-1"
 app = "cvhome-repo"
 projects = [
   "store-core/store-core-gateway",

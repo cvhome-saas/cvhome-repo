@@ -6,39 +6,43 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.75.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.3"
+    }
   }
 }
 
 provider "aws" {
-  region  = var.region
-  alias   = "frankfort"
+  region = var.region
+  alias  = "frankfort"
 }
 
 provider "aws" {
-  region  = "us-east-1"
-  alias   = "virginia"
+  region = "us-east-1"
+  alias  = "virginia"
 }
 
 resource "aws_ecr_repository" "private_ecr_repo" {
-  name = each.value
+  name = "${var.project}/${each.value}"
   image_scanning_configuration {
     scan_on_push = false
   }
-  for_each = var.projects
-  provider = aws.frankfort
+  for_each     = var.projects
+  provider     = aws.frankfort
   force_delete = true
 }
 
 resource "aws_ecrpublic_repository" "public_ecr_repo" {
-  repository_name = each.value
+  repository_name = "${var.project}/${each.value}"
   for_each        = var.projects
   provider        = aws.virginia
-  force_destroy = true
+  force_destroy   = true
 }
 
 resource "aws_iam_user" "ecr-releaser" {
-  name     = "ecr-releaser"
-  provider = aws.virginia
+  name          = "${var.project}-ecr-releaser"
+  provider      = aws.virginia
   force_destroy = true
 }
 
@@ -69,13 +73,13 @@ data "aws_iam_policy_document" "ecr-private-releaser" {
 }
 
 resource "aws_iam_policy" "ecr-private-releaser" {
-  name     = "ecr-private-releaser-policy"
+  name     = "${var.project}-ecr-private-releaser-policy"
   policy   = data.aws_iam_policy_document.ecr-private-releaser.json
   provider = aws.virginia
 }
 
 resource "aws_iam_policy_attachment" "ecr-private-releaser" {
-  name       = "ecr-private-releaser-attachment"
+  name       = "${var.project}-ecr-private-releaser-attachment"
   policy_arn = aws_iam_policy.ecr-private-releaser.arn
   users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.virginia
@@ -110,13 +114,13 @@ data "aws_iam_policy_document" "ecr-public-releaser" {
 }
 
 resource "aws_iam_policy" "ecr-public-releaser" {
-  name     = "ecr-public-releaser-policy"
+  name     = "${var.project}-ecr-public-releaser-policy"
   policy   = data.aws_iam_policy_document.ecr-public-releaser.json
   provider = aws.virginia
 }
 
 resource "aws_iam_policy_attachment" "ecr-public-releaser" {
-  name       = "ecr-public-releaser-attachment"
+  name       = "${var.project}-ecr-public-releaser-attachment"
   policy_arn = aws_iam_policy.ecr-public-releaser.arn
   users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.virginia
@@ -139,14 +143,87 @@ data "aws_iam_policy_document" "ecs-deploy" {
 }
 
 resource "aws_iam_policy" "ecs-deploy" {
-  name     = "ecs-deploy-policy"
+  name     = "${var.project}-ecs-deploy-policy"
   policy   = data.aws_iam_policy_document.ecs-deploy.json
   provider = aws.frankfort
 }
 
 resource "aws_iam_policy_attachment" "ecs-deploy-releaser" {
-  name       = "ecs-deploy-attachment"
+  name       = "${var.project}-ecs-deploy-attachment"
   policy_arn = aws_iam_policy.ecs-deploy.arn
+  users = [aws_iam_user.ecr-releaser.name]
+  provider   = aws.frankfort
+}
+
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "aws_ssm_parameter" "config-stripe" {
+  name = "/${var.project}/config/stripe"
+  type = "String"
+  value = jsonencode({
+    "stripeKey" : "",
+    "stripeWebhockSigningKey" : ""
+  })
+}
+resource "aws_ssm_parameter" "config-domain" {
+  name = "/${var.project}/config/domain"
+  type = "String"
+  value = jsonencode({
+    "domain" : "",
+    "domainCertificateArn" : ""
+  })
+}
+resource "aws_ssm_parameter" "config-smtp" {
+  name = "/${var.project}/config/smtp"
+  type = "String"
+  value = jsonencode({
+    "host" : "",
+    "username" : "",
+    "password" : "",
+    "port" : ""
+  })
+}
+resource "aws_ssm_parameter" "config-kc" {
+  name = "/${var.project}/config/kc"
+  type = "String"
+  value = jsonencode({
+    "username" : "sys-admin@mail.com",
+    "password" : random_password.password.result
+  })
+}
+resource "aws_ssm_parameter" "config-cvhome" {
+  name = "/${var.project}/config/cvhome"
+  type = "String"
+  value = jsonencode({
+    "trackUsage" : "false",
+    "usageExecededAction" : "continue",
+    "nonRenewedSubscriptionAction" : "continue"
+  })
+}
+
+data "aws_iam_policy_document" "ssm-config" {
+  statement {
+    sid    = "s1"
+    effect = "Allow"
+    actions = [
+      "ssm:GetParameters"
+    ]
+    resources = ["*"]
+  }
+}
+resource "aws_iam_policy" "ssm-config" {
+  name     = "${var.project}-ssm-config-policy"
+  policy   = data.aws_iam_policy_document.ssm-config.json
+  provider = aws.frankfort
+}
+
+resource "aws_iam_policy_attachment" "ssm-config-releaser" {
+  name       = "${var.project}-ssm-config"
+  policy_arn = aws_iam_policy.ssm-config.arn
   users = [aws_iam_user.ecr-releaser.name]
   provider   = aws.frankfort
 }
