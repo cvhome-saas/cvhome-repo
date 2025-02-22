@@ -46,9 +46,6 @@ resource "aws_ssm_parameter" "config-pods" {
       index : 0
       id : "1"
       name : "default",
-      org : ""
-      endpoint : ""
-      endpointType : "INTERNAL"
       size : "large"
     },
     {
@@ -56,8 +53,6 @@ resource "aws_ssm_parameter" "config-pods" {
       id : "2"
       name : "org-d1952c95-312e-4bb9-9a2d-b703d031276f",
       org : "d1952c95-312e-4bb9-9a2d-b703d031276f"
-      endpoint : ""
-      endpointType : "INTERNAL"
       size : "x-large",
     }
   ])
