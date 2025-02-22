@@ -4,7 +4,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "5.75.0"
+      version = "5.88.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -155,55 +155,6 @@ resource "aws_iam_policy_attachment" "ecs-deploy-releaser" {
   provider   = aws.frankfort
 }
 
-resource "random_password" "password" {
-  length           = 16
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
-}
-
-resource "aws_ssm_parameter" "config-stripe" {
-  name = "/${var.project}/config/stripe"
-  type = "String"
-  value = jsonencode({
-    "stripeKey" : "",
-    "stripeWebhockSigningKey" : ""
-  })
-}
-resource "aws_ssm_parameter" "config-domain" {
-  name = "/${var.project}/config/domain"
-  type = "String"
-  value = jsonencode({
-    "domain" : "",
-    "domainCertificateArn" : ""
-  })
-}
-resource "aws_ssm_parameter" "config-smtp" {
-  name = "/${var.project}/config/smtp"
-  type = "String"
-  value = jsonencode({
-    "host" : "",
-    "username" : "",
-    "password" : "",
-    "port" : ""
-  })
-}
-resource "aws_ssm_parameter" "config-kc" {
-  name = "/${var.project}/config/kc"
-  type = "String"
-  value = jsonencode({
-    "username" : "sys-admin@mail.com",
-    "password" : random_password.password.result
-  })
-}
-resource "aws_ssm_parameter" "config-cvhome" {
-  name = "/${var.project}/config/cvhome"
-  type = "String"
-  value = jsonencode({
-    "trackUsage" : "false",
-    "usageExecededAction" : "continue",
-    "nonRenewedSubscriptionAction" : "continue"
-  })
-}
 
 data "aws_iam_policy_document" "ssm-config" {
   statement {
