@@ -81,7 +81,7 @@ resource "aws_iam_policy" "ecr-private-releaser" {
 resource "aws_iam_policy_attachment" "ecr-private-releaser" {
   name       = "${var.project}-ecr-private-releaser-attachment"
   policy_arn = aws_iam_policy.ecr-private-releaser.arn
-  users = [aws_iam_user.ecr-releaser.name]
+  users      = [aws_iam_user.ecr-releaser.name]
   provider   = aws.virginia
 }
 
@@ -122,7 +122,7 @@ resource "aws_iam_policy" "ecr-public-releaser" {
 resource "aws_iam_policy_attachment" "ecr-public-releaser" {
   name       = "${var.project}-ecr-public-releaser-attachment"
   policy_arn = aws_iam_policy.ecr-public-releaser.arn
-  users = [aws_iam_user.ecr-releaser.name]
+  users      = [aws_iam_user.ecr-releaser.name]
   provider   = aws.virginia
 }
 
@@ -151,7 +151,7 @@ resource "aws_iam_policy" "ecs-deploy" {
 resource "aws_iam_policy_attachment" "ecs-deploy-releaser" {
   name       = "${var.project}-ecs-deploy-attachment"
   policy_arn = aws_iam_policy.ecs-deploy.arn
-  users = [aws_iam_user.ecr-releaser.name]
+  users      = [aws_iam_user.ecr-releaser.name]
   provider   = aws.frankfort
 }
 
@@ -175,6 +175,6 @@ resource "aws_iam_policy" "ssm-config" {
 resource "aws_iam_policy_attachment" "ssm-config-releaser" {
   name       = "${var.project}-ssm-config"
   policy_arn = aws_iam_policy.ssm-config.arn
-  users = [aws_iam_user.ecr-releaser.name]
+  users      = [aws_iam_user.ecr-releaser.name]
   provider   = aws.frankfort
 }
