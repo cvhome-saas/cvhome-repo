@@ -51,8 +51,8 @@ resource "aws_ssm_parameter" "config-pods" {
     {
       index : 1
       id : "2"
-      name : "org-d1952c95-312e-4bb9-9a2d-b703d031276f",
-      org : "d1952c95-312e-4bb9-9a2d-b703d031276f"
+      name : "o-21f023932bc66470c104b76f",
+      org : "21f023932bc66470c104b76f"
       size : "x-large",
     }
   ])
