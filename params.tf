@@ -10,3 +10,11 @@ variable "project" {
 variable "projects" {
   type = set(string)
 }
+variable "pods" {
+  type = list(object({
+    index : number
+    id : string
+    name : string,
+    size : string
+  }))
+}

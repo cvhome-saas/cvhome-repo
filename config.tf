@@ -41,21 +41,7 @@ resource "aws_ssm_parameter" "config-kc" {
 resource "aws_ssm_parameter" "config-pods" {
   name = "/${var.project}/config/pods"
   type = "String"
-  value = jsonencode([
-    {
-      index : 0
-      id : "1"
-      name : "default",
-      size : "large"
-    },
-    {
-      index : 1
-      id : "2"
-      name : "o-21f023932bc66470c104b76f",
-      org : "21f023932bc66470c104b76f"
-      size : "x-large",
-    }
-  ])
+  value = jsonencode(var.pods)
 }
 resource "aws_ssm_parameter" "config-cvhome" {
   name = "/${var.project}/config/cvhome"

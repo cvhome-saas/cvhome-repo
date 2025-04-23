@@ -16,3 +16,18 @@ projects = [
   "store-pod/merchant-ui",
   "store-pod/store-pod-saas-gateway"
 ]
+pods = [
+  {
+    index : 0
+    id : "1"
+    name : "default",
+    size : "large"
+  },
+  # {
+  #   index : 1
+  #   id : "2"
+  #   name : "o-21f023932bc66470c104b76f",
+  #   org : "21f023932bc66470c104b76f"
+  #   size : "x-large",
+  # }
+]
