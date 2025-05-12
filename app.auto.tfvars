@@ -16,7 +16,22 @@ projects = [
   "store-pod/merchant-ui",
   "store-pod/store-pod-saas-gateway"
 ]
-pods = [
+cvhome-config = {
+  "trackUsage" : "false",
+  "usageExecededAction" : "continue",
+  "nonRenewedSubscriptionAction" : "continue"
+}
+smtp-config = {
+  "host" : "",
+  "username" : "",
+  "password" : "",
+  "port" : ""
+}
+stripe-config = {
+  "stripeKey" : "",
+  "stripeWebhockSigningKey" : ""
+}
+pods-config = [
   {
     index : 0
     id : "1"

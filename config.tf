@@ -7,10 +7,7 @@ resource "random_password" "password" {
 resource "aws_ssm_parameter" "config-stripe" {
   name = "/${var.project}/config/stripe"
   type = "String"
-  value = jsonencode({
-    "stripeKey" : "",
-    "stripeWebhockSigningKey" : ""
-  })
+  value = jsonencode(var.stripe-config)
 }
 
 resource "aws_ssm_parameter" "config-domain" {
@@ -23,12 +20,7 @@ resource "aws_ssm_parameter" "config-domain" {
 resource "aws_ssm_parameter" "config-smtp" {
   name = "/${var.project}/config/smtp"
   type = "String"
-  value = jsonencode({
-    "host" : "",
-    "username" : "",
-    "password" : "",
-    "port" : ""
-  })
+  value = jsonencode(var.smtp-config)
 }
 resource "aws_ssm_parameter" "config-kc" {
   name = "/${var.project}/config/kc"
@@ -41,15 +33,11 @@ resource "aws_ssm_parameter" "config-kc" {
 resource "aws_ssm_parameter" "config-pods" {
   name = "/${var.project}/config/pods"
   type = "String"
-  value = jsonencode(var.pods)
+  value = jsonencode(var.pods-config)
 }
 resource "aws_ssm_parameter" "config-cvhome" {
   name = "/${var.project}/config/cvhome"
   type = "String"
-  value = jsonencode({
-    "trackUsage" : "false",
-    "usageExecededAction" : "continue",
-    "nonRenewedSubscriptionAction" : "continue"
-  })
+  value = jsonencode(var.cvhome-config)
 }
 
