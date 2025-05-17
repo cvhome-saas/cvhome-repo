@@ -14,7 +14,7 @@ resource "aws_ssm_parameter" "config-domain" {
   name = "/${var.project}/config/domain"
   type = "String"
   value = jsonencode({
-    "domain" : "best-store.click"
+    "domain" : ""
   })
 }
 resource "aws_ssm_parameter" "config-smtp" {
