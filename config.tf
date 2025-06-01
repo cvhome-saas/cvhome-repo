@@ -18,7 +18,7 @@ resource "aws_ssm_parameter" "config-domain" {
 resource "aws_ssm_parameter" "config-kc" {
   name = "/${var.project}/config/kc"
   type = "String"
-  value = merge(jsonencode(var.kc-config), {
+  value = jsonencode(merge(var.kc-config), {
     password : random_password.password.result
   })
 }
