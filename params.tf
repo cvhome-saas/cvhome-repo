@@ -10,32 +10,20 @@ variable "project" {
 variable "projects" {
   type = set(string)
 }
-variable "cvhome-config" {
-  type = object({
-    trackUsage : string,
-    usageExecededAction : string,
-    nonRenewedSubscriptionAction : string
-  })
-}
 variable "stripe-config" {
   type = object({
     stripeKey : string,
     stripeWebhockSigningKey : string
   })
 }
-variable "smtp-config" {
+variable "domain-config" {
   type = object({
-    host : string,
-    username : string,
-    password : string,
-    port : string
+    domain : string
   })
 }
-variable "pods-config" {
-  type = list(object({
-    index : number
-    id : string
-    name : string,
-    size : string
-  }))
+variable "kc-config" {
+  type = object({
+    username : string,
+    password : string
+  })
 }
